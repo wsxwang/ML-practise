@@ -13,7 +13,7 @@ import sys;
 import os;
 import math;
 #import numpy as np;
-#import matplotlib.pyplot as plt;
+import matplotlib.pyplot as plt;
 
 """
 draw graphics two points which minkowsky distance is 1
@@ -52,7 +52,7 @@ def minkowsky_QY(x, p):
     return [-y,y];
 
 if __name__ == "__main__":
-    drawminkowsky(100, 3);
+    drawminkowsky(100, 6);
 
 
 
