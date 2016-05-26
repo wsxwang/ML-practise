@@ -27,7 +27,7 @@ def minkowsky_dis(P,Q,p):
 
 
 if __name__ == "__main__":
-    P = [1,0];
-    Q = [0,1];
-    print minkowsky_dis(P, Q, 2);
+    P = [3,0];
+    Q = [0,4];
+    assert(minkowsky_dis(P, Q, 2) == 5);
 

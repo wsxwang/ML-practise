@@ -11,6 +11,8 @@ draw gragh of machine learning graphics
 
 import sys;
 import os;
+import math;
+#import numpy as np;
 #import matplotlib.pyplot as plt;
 
 """
@@ -31,10 +33,10 @@ def drawminkowsky(sampling =10, p = 2):
     print "minkowsky, p = %d, sampling = %d"%(p, sampling);
     X = range(sampling * -1, 0) + range(0, sampling +1);
     for x in X:
-        Y = minkowsky_QY(x,sampling, p);
+        xf = x/float(sampling);
+        Y = minkowsky_QY(xf, p);
         for y in Y:
-            print (x, y);
-
+            print (xf, y);
 
 """
 known minkowsky distance, point P, p, x of point Q, get y of point Q
@@ -43,14 +45,14 @@ dimension is 2
 在2维前提下
 已知闵氏距离、点P、计算参数p以及点Q的x坐标，求点Q的y坐标
 
-P=(0,0), distance d=sampling
-距离使用采样值，不使用1，避免使用浮点运算
+P=(0,0), distance d=1
 """
-def minkowsky_QY(x, d, p):
-    return [-0.5, 0.5];
+def minkowsky_QY(x, p):
+    y = 1 - math.pow(math.fabs(x),p);
+    return [-y,y];
 
 if __name__ == "__main__":
-    drawminkowsky(6);
+    drawminkowsky(100, 3);
 
 
 
