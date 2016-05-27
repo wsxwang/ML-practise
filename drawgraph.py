@@ -12,47 +12,55 @@ draw gragh of machine learning graphics
 import sys;
 import os;
 import math;
-#import numpy as np;
+import numpy as np;
 import matplotlib.pyplot as plt;
+import random;
 
 """
-draw graphics two points which minkowsky distance is 1
+draw graphics two points which minkowski distance is 1
 dimension is 2
 point P is (0,0), point Q is (x,y)
-minkowsky distance n is 1, p will be given
+minkowski distance n is 1, p will be given
 
-画minkowsky距离为1的两个点的图形
+画minkowski距离为1的两个点的图形
 维度取2（公式中n取2）
 公式参数p为输入
 两个点P(0,0),Q(X,Y)
 
-p:default is 2(euclidean distance)
-sampling:default is 10, means x={-1,-0.9,...,0.9,1}
+p:a list, default is [2](euclidean distance)
+sampling:default is 10
 """
-def drawminkowsky(sampling =10, p = 2):
-    print "minkowsky, p = %d, sampling = %d"%(p, sampling);
-    X = range(sampling * -1, 0) + range(0, sampling +1);
-    for x in X:
-        xf = x/float(sampling);
-        Y = minkowsky_QY(xf, p);
-        for y in Y:
-            print (xf, y);
+def drawminkowski(sampling =10, p = [2]):
+    print "minkowski, p = %s, sampling = %d"%(str(p), sampling);
 
-"""
-known minkowsky distance, point P, p, x of point Q, get y of point Q
-dimension is 2
+    X = np.linspace(-1, 1, sampling);
 
-在2维前提下
-已知闵氏距离、点P、计算参数p以及点Q的x坐标，求点Q的y坐标
+    plt.figure(figsize=(8,8), dpi=80);
+    plt.xlabel("X");
+    plt.ylabel("Y");
+    plt.ylim(-1,1)
+    plt.title("minkowski distance, distance = 1, p = " + str(p));
 
-P=(0,0), distance d=1
-"""
-def minkowsky_QY(x, p):
-    y = 1 - math.pow(math.fabs(x),p);
-    return [-y,y];
+    plt.plot(np.linspace(-1, 1, 100), np.zeros(100), "k,", linewidth = 2);
+    plt.plot(np.zeros(100), np.linspace(-1, 1, 100), "k,", linewidth = 2);
+
+    for pi in p:
+        if pi <= 0:
+            continue;
+        print pi;
+        Y = np.power(1- np.power(np.abs(X), pi), 1/float(pi));
+        print X;
+        print Y;
+        color = random.randint(1, 0xffffff);
+        plt.plot(X,Y, label ="p=" + str(pi), color = "#" + format(color, "06x"), linewidth = 1);
+        plt.plot(X,-Y, color = "#" + format(color, "06x"), linewidth = 1);
+
+    plt.legend();
+    plt.show();
+
 
 if __name__ == "__main__":
-    drawminkowsky(100, 6);
+    drawminkowski(10000, [1/float(10),1/float(2),1,2,3,10]);
 
 
 
