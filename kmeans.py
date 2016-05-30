@@ -55,17 +55,7 @@ def alg_kmeans(points, kcentroids, p):
         # cluster once
         c2 = PointstoCluster(points, centroids, p);
         # if cluster change
-        print cmp(c1,c2)
-        for i in range(k):
-            if len(c1[i]) != len(c2[i]):
-                change = True;
-                break;
-            if len(c1[i]) == 0:
-                continue;
-            if c1[i] != c2[i]:
-                change = True;
-                break;
-        print change;
+        change = (cmp(c1,c2) != 0);
         # if not change, do again
         if change:
             c1 = c2;
