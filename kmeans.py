@@ -26,58 +26,122 @@ P,Q是两个同维向量
 K-means algrithm
 use minkowski distance to calculate centroids of cluster
 points:data set, each point is a vector with same dimention
-k:k initial centroids of clusters
+kcentroids:k initial centroids of clusters
 p:minkowski distance parameter
-ret:k cluster of points
+ret:k cluster of points index
 
 K-means算法
 points:给定的同维向量数据集合
 距离算法采用闵氏距离
 kcentroids:k个分类的初始质心
 p:闵氏距离的参数p值
-返回值:k个数据集合
+返回值:k个数据集合，元素是points的下标
 """
 def alg_kmeans(points, kcentroids, p):
-    """
-    print points;
-    print kcentroids
-    print p;
-    """
     assert(len(points) > 1);
     assert(len(kcentroids) > 1);
     assert(len(points[0]) == len(kcentroids[0]));
 
     k = len(kcentroids);
-    clusters = [[] for row in range(k)];
+    # centroids for clusters, each centroid is a vector
     centroids = kcentroids;
-    nochange = False;
+    # clusters, set of point's index
+    c1 = [[] for row in range(k)];
+    c2 = [[] for row in range(k)];
 
-    print len(clusters);
-    print clusters;
+    change = True;
+    while change:
+        change = False;
+        # cluster once
+        c2 = PointstoCluster(points, centroids, p);
+        # if cluster change
+        print cmp(c1,c2)
+        for i in range(k):
+            if len(c1[i]) != len(c2[i]):
+                change = True;
+                break;
+            if len(c1[i]) == 0:
+                continue;
+            if c1[i] != c2[i]:
+                change = True;
+                break;
+        print change;
+        # if not change, do again
+        if change:
+            c1 = c2;
+            # recalculate cluster centroids
+            centroids = RecalculateCentroids(points, centroids, c2);
+    return c2;
+
+"""
+cluster points to K clusters according to the distance to each centroid
+根据到质心的距离，将数据分为K个类
+
+use minkowski distance to calculate centroids of cluster
+points:data set, each point is a vector with same dimention
+kcentroids:centroids of clusters
+p:minkowski distance parameter
+ret:k cluster of points index
+
+points:给定的同维向量数据集合
+距离算法采用闵氏距离
+kcentroids:k个分类的质心
+p:闵氏距离的参数p值
+返回值:k个数据集合，元素是points的下标
+"""
+def PointstoCluster(points, kcentroids, p):
+    assert(len(points) > 1);
+    assert(len(kcentroids) > 1);
+    assert(len(points[0]) == len(kcentroids[0]));
+
+    k = len(kcentroids);
+    clusters = [[] for i in range(k)];
     
-    while nochange == False:
-        for point in points:
-            # cal distance to each centroid
-            mindis = sys.float_info.max;
-            clusteridx = -1;
-            for i in range(0, k):
-                dis = dis_minkowski(point, centroids[i], p);
-                if dis < mindis:
-                    clusteridx = i;
-                   # clusters[i].
-                    
-             #   dis[i] = ;
-                
-            # point -> cluster
+    for i in range(len(points)):
+        # cal distance to each centroid
+        mindis = sys.float_info.max;
+        point = points[i];
+        clusteridx = -1;
+        for j in range(0, k):
+            dis = dis_minkowski(point, kcentroids[j], p);
+            if dis < mindis:
+                clusteridx = j;
+                mindis = dis;
+        clusters[clusteridx].append(i);
 
-        # recalculate centroids for each cluster
-        """
-        for point in clusters:
-            print point;
-        """  
-        break;
     return clusters;
 
+"""
+recalculate centroid of cluster
+重新计算每个类别的质心
+
+points:data set, each point is a vector with same dimention
+kcentroids:centroids of clusters
+clusters:cluster item is a list of points' index
+ret:k cluster centroids
+
+points:给定的同维向量数据集合
+kcentroids:k个分类的质心
+clusters:分类的列表，每个元素是一个list，list元素是point是的下标
+返回值:新的k个分类的质心list
+"""
+def RecalculateCentroids(points, kcentroids, clusters):
+    assert(len(points) > 1);
+    assert(len(kcentroids) > 1);
+    assert(len(points[0]) == len(kcentroids[0]));
+
+    k = len(kcentroids);
+    centroids = kcentroids;
+    dimention = len(points[0]);
+    for i in range(k):
+        if len(clusters[i]) == 0:
+            continue;
+        for d in range(0, dimention):
+            centroids[i][d] = 0;
+            for pidx in clusters[i]:
+                centroids[i][d] += points[pidx][d];
+            centroids[i][d] /= len(clusters[i]);
+    return centroids;
 
 """
 ------------------------------------------------------------------------
@@ -92,11 +156,12 @@ def test():
         [10, -3],[8,-5],
         [-7,2],[-9,9],[-9,8]
         ];
+
     kcentroids = [
-        [random.randint(-1000, 1000), random.randint(-1000, 1000)],
-        [random.randint(-1000, 1000), random.randint(-1000, 1000)],
-        [random.randint(-1000, 1000), random.randint(-1000, 1000)],
-        [random.randint(-1000, 1000), random.randint(-1000, 1000)],
+        [random.randint(-10, 10), random.randint(-10, 10)],
+        [random.randint(-10, 10), random.randint(-10, 10)],
+        [random.randint(-10, 10), random.randint(-10, 10)],
+        [random.randint(-10, 10), random.randint(-10, 10)],
         ];
 
     clusters = alg_kmeans(points, kcentroids, 2);
