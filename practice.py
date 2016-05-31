@@ -68,19 +68,36 @@ class CKmeans():
         plt.figure(figsize=(8,8), dpi=80);
         plt.xlabel("X");
         plt.ylabel("Y");
-        plt.ylim(-1,1)
+        plt.ylim(-100,100)
         plt.title("k-means, %d points, k=%d, p=%d"%(pointscount,k,p));
         plt.plot(np.linspace(-100, 100, 100), np.zeros(100), "k,", linewidth = 2);
         plt.plot(np.zeros(100), np.linspace(-100, 100, 100), "k,", linewidth = 2);
 
         points=[[random.randint(-100, 100), random.randint(-100, 100)] for i in range(pointscount)];
         centroids=[[random.randint(-100, 100), random.randint(-100, 100)] for i in range(k)];
-        print points;
-        print centroids;
         clusters=alg_kmeans(points, centroids, p);
-                            
-
-        
+        for c in clusters:
+            if len(c) == 0:
+                continue;
+            X = [];
+            Y = [];
+            for idx in c:
+                point = points[idx];
+                X.append(point[0]);
+                Y.append(point[1]);
+            centroidOfc = [sum(X)/len(X), sum(Y)/len(Y)];
+            # choose color and style
+            color=random.randint(1, 0xffffff);
+            color="#" + format(color, "06x");
+            shape="'.,ov^<>1234sphHd|_+x";
+            shape=shape[random.randint(0, len(shape) - 1)];
+            shape +=':';
+            plt.plot(X,Y, shape, color=color, linewidth = 1);
+            # annotate
+            plt.annotate(str(len(c))+"points", xy=centroidOfc, xycoords='data',color=color);
+            # centroids of clusters
+            plt.plot(centroidOfc[0], centroidOfc[1], "*", color=color);
+            
         plt.legend();
         plt.show();
 
