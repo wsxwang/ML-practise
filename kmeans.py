@@ -60,7 +60,7 @@ def alg_kmeans(points, kcentroids, p):
         if change:
             c1 = c2;
             # recalculate cluster centroids
-            centroids = RecalculateCentroids(points, centroids, c2);
+            centroids = RecalculateCentroids(points, k, c2);
     return c2;
 
 """
@@ -106,23 +106,21 @@ recalculate centroid of cluster
 重新计算每个类别的质心
 
 points:data set, each point is a vector with same dimention
-kcentroids:centroids of clusters
+k:number of clusters
 clusters:cluster item is a list of points' index
 ret:k cluster centroids
 
 points:给定的同维向量数据集合
-kcentroids:k个分类的质心
+k:分类数目
 clusters:分类的列表，每个元素是一个list，list元素是point是的下标
 返回值:新的k个分类的质心list
 """
-def RecalculateCentroids(points, kcentroids, clusters):
+def RecalculateCentroids(points, k, clusters):
     assert(len(points) > 1);
-    assert(len(kcentroids) > 1);
-    assert(len(points[0]) == len(kcentroids[0]));
+    assert(k > 1);
 
-    k = len(kcentroids);
-    centroids = kcentroids;
     dimention = len(points[0]);
+    centroids = [[0 for d in range(dimention)] for row in range(k)];
     for i in range(k):
         if len(clusters[i]) == 0:
             continue;
