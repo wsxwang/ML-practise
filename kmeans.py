@@ -25,7 +25,7 @@ P,Q是两个同维向量
 
 K-means algrithm
 use minkowski distance to calculate centroids of cluster
-points:data set, each point is a vector with same dimention
+points:data set, each point is a vector with same dimension
 kcentroids:k initial centroids of clusters
 p:minkowski distance parameter
 ret:k cluster of points index
@@ -68,7 +68,7 @@ cluster points to K clusters according to the distance to each centroid
 根据到质心的距离，将数据分为K个类
 
 use minkowski distance to calculate centroids of cluster
-points:data set, each point is a vector with same dimention
+points:data set, each point is a vector with same dimension
 kcentroids:centroids of clusters
 p:minkowski distance parameter
 ret:k cluster of points index
@@ -105,7 +105,7 @@ def PointstoCluster(points, kcentroids, p):
 recalculate centroid of cluster
 重新计算每个类别的质心
 
-points:data set, each point is a vector with same dimention
+points:data set, each point is a vector with same dimension
 k:number of clusters
 clusters:cluster item is a list of points' index
 ret:k cluster centroids
@@ -119,12 +119,12 @@ def RecalculateCentroids(points, k, clusters):
     assert(len(points) > 1);
     assert(k > 1);
 
-    dimention = len(points[0]);
-    centroids = [[0 for d in range(dimention)] for row in range(k)];
+    dimension = len(points[0]);
+    centroids = [[0 for d in range(dimension)] for row in range(k)];
     for i in range(k):
         if len(clusters[i]) == 0:
             continue;
-        for d in range(0, dimention):
+        for d in range(0, dimension):
             centroids[i][d] = 0;
             for pidx in clusters[i]:
                 centroids[i][d] += points[pidx][d];
@@ -134,7 +134,7 @@ def RecalculateCentroids(points, k, clusters):
 """
 ------------------------------------------------------------------------
 test function
-dimention=2, p=2 euclidean distance, 10 points, cluster 4
+dimension=2, p=2 euclidean distance, 10 points, cluster 4
 基于欧式几何距离，即维度2，p值2，10个点，分为4类
 """
 def test():
