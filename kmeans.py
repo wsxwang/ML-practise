@@ -1,7 +1,7 @@
 #-*-coding:utf-8-*-
 
 """
-k-means.py
+kmeans.py
 Wang Xiaoqi
 create:2016-05-29
 
@@ -17,12 +17,6 @@ import random;
 from distance import *
 
 """
-calculate minkowsky distance
-P,Q:two vectors(list), same dimension
-
-计算闵氏距离
-P,Q是两个同维向量
-
 K-means algrithm
 use minkowski distance to calculate centroids of cluster
 points:data set, each point is a vector with same dimension
