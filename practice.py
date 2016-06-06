@@ -16,7 +16,7 @@ import matplotlib.pyplot as plt;
 import random;
 import Tkinter as tk
 
-from kmeans import *
+import drawgraph as dr
 
 
 """
@@ -52,54 +52,22 @@ class CKmeans():
         bt = tk.Button(self.master, text='k-means', command=self.btfunc_kmeans);
         bt.pack();
         bt.place(x=100, y=100);
-
         
     def btfunc_kmeans(self):
-        self.do_kmeans(self.pointscount.get() or 10, self.k.get() or 3, self.p.get() or 2);
-
-    def do_kmeans(self, pointscount, k, p):
+        pointscount = self.pointscount.get() or 10;
         if type(pointscount) == str:
             pointscount = int(pointscount);
-        if type(p) == str:
-            p = int(p);
+        points = [[random.randint(-100, 100), random.randint(-100, 100)] for i in range(pointscount)];
+        k = self.k.get() or 3;
         if type(k) == str:
             k = int(k);
-        
-        plt.figure(figsize=(8,8), dpi=80);
-        plt.xlabel("X");
-        plt.ylabel("Y");
-        plt.ylim(-100,100)
-        plt.title("k-means, %d points, k=%d, p=%d"%(pointscount,k,p));
-        plt.plot(np.linspace(-100, 100, 100), np.zeros(100), "k,", linewidth = 2);
-        plt.plot(np.zeros(100), np.linspace(-100, 100, 100), "k,", linewidth = 2);
+        centroids = [[random.randint(-100, 100), random.randint(-100, 100)] for i in range(k)];
+        p = self.p.get() or 2;
+        if type(p) == str:
+            p = int(p);
+        dr.drawkmeans(points, centroids, p);
 
-        points=[[random.randint(-100, 100), random.randint(-100, 100)] for i in range(pointscount)];
-        centroids=[[random.randint(-100, 100), random.randint(-100, 100)] for i in range(k)];
-        clusters=alg_kmeans(points, centroids, p);
-        for c in clusters:
-            if len(c) == 0:
-                continue;
-            X = [];
-            Y = [];
-            for idx in c:
-                point = points[idx];
-                X.append(point[0]);
-                Y.append(point[1]);
-            centroidOfc = [sum(X)/len(X), sum(Y)/len(Y)];
-            # choose color and style
-            color=random.randint(1, 0xffffff);
-            color="#" + format(color, "06x");
-            shape="'.,ov^<>1234sphHd|_+x";
-            shape=shape[random.randint(0, len(shape) - 1)];
-            shape +=':';
-            plt.plot(X,Y, shape, color=color, linewidth = 1);
-            # annotate
-            plt.annotate(str(len(c))+"points", xy=centroidOfc, xycoords='data',color=color);
-            # centroids of clusters
-            plt.plot(centroidOfc[0], centroidOfc[1], "*", color=color);
-            
-        plt.legend();
-        plt.show();
+
 
 """
 ------------------------------------------------------------------------
