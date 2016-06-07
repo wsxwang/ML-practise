@@ -34,7 +34,7 @@ p:a list, default is [2](euclidean distance)
 sampling:default is 10
 """
 def drawminkowski(sampling =10, p = [2]):
-    print "minkowski, p = %s, sampling = %d"%(str(p), sampling);
+    print "minkowski, p=%s, sampling=%d"%(str(p), sampling);
 
     X = np.linspace(-1, 1, sampling);
 
@@ -77,7 +77,7 @@ k:各类别的初始质心
 p:采用闵式距离作为距离公式，参数p值
 """
 def drawkmeans(points, centroids, p):
-    print "k-means:n=",len(points),",k=",len(centroids),",p=",p;
+    print "k-means:n=",len(points),", k=",len(centroids),", p=",p;
     assert(len(points) > 0);
     assert(len(centroids) > 0);
     assert(p > 0);
@@ -86,12 +86,13 @@ def drawkmeans(points, centroids, p):
     plt.xlabel("X");
     plt.ylabel("Y");
     plt.ylim(-100,100)
-    plt.title("k-means, %d points, k=%d, p=%d"%(len(points),len(centroids),p));
     plt.plot(np.linspace(-100, 100, 100), np.zeros(100), "k,", linewidth = 2);
     plt.plot(np.zeros(100), np.linspace(-100, 100, 100), "k,", linewidth = 2);
 
-    clusters=kmeans.alg_kmeans(points, centroids, p);
-    print clusters;
+    clusters, turn=kmeans.alg_kmeans(points, centroids, p);
+    print turn, "turns";
+    print "clusters:", clusters;
+    plt.title("k-means, %d points, k=%d, p=%d, turns=%d"%(len(points),len(centroids),p, turn));
     for c in clusters:
         if len(c) == 0:
             continue;
@@ -144,7 +145,7 @@ def drawfcm2(points,u,m,p,e):
     assert(p > 0);
     assert(e > 0);
     c=len(u[0]);
-    print "fcm:n=",len(points),",c=",c,",m=",m,",p=",p,",e=",e;
+    print "fcm:n=",len(points),", c=",c,", m=",m,", p=",p,", e=",e;
 
     plt.figure(figsize=(8,8), dpi=80);
     plt.xlabel("X");
@@ -156,7 +157,7 @@ def drawfcm2(points,u,m,p,e):
 
     u2,turn=fcm.alg_fcm(points, u, m, p, e);
     plt.title("fcm, %d points, c=%d, m=%d, p=%d, e=%f, turns=%d"%(len(points),len(u[0]), m, p, e, turn));
-    print turn," turns";
+    print turn,"turns";
     print "last u:", u2;
     clusters = [[] for i in range(c)];
     for i in range(len(u2)):

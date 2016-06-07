@@ -22,14 +22,14 @@ use minkowski distance to calculate centroids of cluster
 points:data set, each point is a vector with same dimension
 kcentroids:k initial centroids of clusters
 p:minkowski distance parameter
-ret:k cluster of points index
+ret:tuple(k clusters, iteration turn count)k cluster of points index
 
 K-means算法
 points:给定的同维向量数据集合
 距离算法采用闵氏距离
 kcentroids:k个分类的初始质心
 p:闵氏距离的参数p值
-返回值:k个数据集合，元素是points的下标
+返回值:(k个数据集合, 迭代次数)k个数据集合，元素是points的下标
 """
 def alg_kmeans(points, kcentroids, p):
     assert(len(points) > 1);
@@ -43,6 +43,7 @@ def alg_kmeans(points, kcentroids, p):
     c1 = [[] for row in range(k)];
     c2 = [[] for row in range(k)];
 
+    turn = 0;
     change = True;
     while change:
         change = False;
@@ -55,7 +56,8 @@ def alg_kmeans(points, kcentroids, p):
             c1 = c2;
             # recalculate cluster centroids
             centroids = RecalculateCentroids(points, k, c2);
-    return c2;
+        turn= turn + 1;
+    return (c2, turn);
 
 """
 cluster points to K clusters according to the distance to each centroid
@@ -146,10 +148,11 @@ def test():
         [random.randint(-10, 10), random.randint(-10, 10)],
         ];
 
-    clusters = alg_kmeans(points, kcentroids, 2);
+    clusters, turn = alg_kmeans(points, kcentroids, 2);
 
     assert(len(clusters) == 4);
     print clusters;
+    print turn;
     
 if __name__ == "__main__":
     test();
