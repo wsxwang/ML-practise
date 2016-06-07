@@ -68,17 +68,85 @@ class CKmeans():
         dr.drawkmeans(points, centroids, p);
 
 
+def strorint(si):
+    if type(si) == str:
+        si = int(si);
+    return si;
 
 """
 ------------------------------------------------------------------------
 main
 """
+#控件
+root = tk.Tk();             # form
+e_n = tk.Entry(root, text="100");       # data count
+t_points = tk.Text(root, width=30, height=10
+                   ,wrap='none');   # data points
+
+        
+# 按钮函数
+def btfunc_randompoints():
+    pass;
+
+def btfunc_kmeans():
+    pointscount = strorint(e_n.get() or 10);
+    k = 3;
+    p = 2;
+    
+    points = [[random.randint(-100, 100), random.randint(-100, 100)] for i in range(pointscount)];
+    centroids = [[random.randint(-100, 100), random.randint(-100, 100)] for i in range(k)];
+
+    dr.drawkmeans(points, centroids, p);
+    
+    
 if __name__ == "__main__":
-    root = tk.Tk();
     root.title("practie");
     root.geometry('640x480');
 
-    kmeans = CKmeans(root);
-    kmeans.createWidgets();
+    # data config
+    l=tk.Label(root, text="data point set config:");
+    l.pack();
+    l.place(x=10,y=10);
+    l=tk.Label(root, text="n=");
+    l.pack();
+    l.place(x=10, y= 40);
+    e_n.pack();
+    e_n.place(x=50, y=40);
+    l=tk.Label(root, text="points:");
+    l.pack();
+    l.place(x=10, y=80);
+    bt=tk.Button(root, text='random data', command=btfunc_randompoints);
+    bt.pack();
+    bt.place(x=80, y=80);
+    t_points.pack();
+    t_points.place(x=10, y=120);
+
+    # draw k-means gragh
+    bt=tk.Button(root, text='k-means', command=btfunc_kmeans);
+    bt.pack();
+    bt.place(x=80, y=80);
+
+
 
     root.mainloop();
+
+    #
+
+"""
+    # data points
+    e_points.pack();
+    e_points.place(x=200,y=10);
+
+    f = tk.Toplevel(root);
+    f.title("nwe");
+    tk.Label(f, text="new").pack();
+    f.mainloop();
+        
+
+
+    
+
+    #kmeans = CKmeans(root);
+    #kmeans.createWidgets();
+"""
+    
