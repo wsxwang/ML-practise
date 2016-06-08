@@ -35,6 +35,10 @@ def dis_minkowski(P,Q,p):
 test function
 """
 def test_minkowski():
+    P = [4];
+    Q = [1];
+    assert(dis_minkowski(P,Q,2) == 3);
+    
     P = [4,2];
     Q = [1,6];
     assert(dis_minkowski(P, Q, 2) == 5);

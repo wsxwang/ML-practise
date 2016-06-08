@@ -178,6 +178,54 @@ def drawfcm2(points, u, m, p, e, terminateturn=sys.maxint):
         clusters[ci].append(points[i]);
     drawpoints(clusters, "fcm, %d points, c=%d, m=%d, p=%d, e=%f, turns=%d"%(len(points),len(u[0]), m, p, e, turn));
 
+"""
+draw fcm gragh
+data dimension is 1, which means x axis is points(-100,100), y axis is degree of membership
+
+points:data set of numbers
+u:default u matrix, degree of membership of data point in cluster
+m:
+p:minkowski distance parameter
+e:terminate number
+terminateturn:terminate iteration turn, 0 based
+
+绘制fcm算法概率图示
+数据是一维，即：X轴表示数据点，Y轴表示归属概率
+
+points:数据集，节点是实数
+u:初始归属概率矩阵
+m:权值
+p:采用闵式距离作为距离公式，参数p值
+e:终止参数值
+terminateturn:终止迭代的轮次，从0开始
+"""
+def drawfcm1(points, u, m, p, e, terminateturn=sys.maxint):
+    assert(len(points) > 0);
+    assert(len(u) == len(points));
+    assert(len(u[0]) > 0);
+    assert(m > 0);
+    assert(p > 0);
+    assert(e > 0);
+    c=len(u[0]);
+    print "fcm:n=",len(points),", c=",c,", m=",m,", p=",p,", e=",e,", turn=", terminateturn;
+
+    u2,turn=fcm.alg_fcm(points, u, m, p, e, terminateturn);
+    print turn,"turns";
+    print "last u:", u2;
+    clusters = [[] for i in range(c)];
+    for i in range(len(u2)):
+        maxu = max(u2[i]);
+        ci = u2[i].index(maxu);
+        clusters[ci].append(points[i]);
+    print clusters;
+#    drawpoints(clusters, "fcm, %d points, c=%d, m=%d, p=%d, e=%f, turns=%d"%(len(points),len(u[0]), m, p, e, turn));
+
+
+
+"""
+------------------------------------------------------------------------
+test func
+"""
 def testkmeans(points):
     print "-----k-means-----";    
     k = random.randint(2,15);
@@ -186,23 +234,50 @@ def testkmeans(points):
     print "default centroids:", centroids;
     drawkmeans(points, centroids, p);
 
-def testfcm(points):
-    print "-----fcm-----";   
+def testfcm2(points):
+    print "-----fcm(100*100)-----";   
     c = random.randint(2,5);
     m = random.randint(2, 10);
     p = random.randint(1,3);
     e = random.random();
     if e == 0:
-        e = 0.5;
+        e = 0.1;
     u = [[0 for j in range(c)] for i in range(pointscount)]
     for i in range(pointscount):
         u[i][0] = random.random();
+        if u[i][0] == 0:
+            u[i][0] = 0.1;
         u[i][1] = 1 - u[i][0];
     print "default u:", u;
     drawfcm2(points,u,m,p,e);
     
+def testfcm1():
+    print "-----fcm(-100<-->100)-----";
+    pointscount = random.randint(10,100);
+    points = [[random.randint(-100,100)] for i in range(pointscount)];
+    c = random.randint(2,5);
+    m = random.randint(2, 10);
+    p = random.randint(1,3);
+    e = random.random();
+    if e == 0:
+        e = 0.1;
+    u = [[0 for j in range(c)] for i in range(pointscount)]
+    for i in range(pointscount):
+        u[i][0] = random.random();
+        if u[i][0] == 0:
+            u[i][0] = 0.1;
+        u[i][1] = 1 - u[i][0];
+    print "points:", points;
+    print "default u:", u;
+    drawfcm1(points,u,m,p,e);
+        
+"""
+------------------------------------------------------------------------
+main
+"""
 if __name__ == "__main__":
-
+    testfcm1();
+    """
     clusters = [[[random.randint(-100+50*c, -100+50*(c+1)), random.randint(-100, 100)] for p in range(random.randint(5, 10))] for c in range(4)];
     drawpoints(clusters, "test title");
     
@@ -213,8 +288,13 @@ if __name__ == "__main__":
     points = [[random.randint(-100, 100), random.randint(-100, 100)] for i in range(pointscount)];
     print pointscount, " points:\n", points;
 
-    #fcm
-    testfcm(points);
-
     #k-means
     testkmeans(points);
+
+    #fcm, dimension=2
+    testfcm2(points);
+    #fcm dimension=1
+    testfcm1();
+    """
+
+    
