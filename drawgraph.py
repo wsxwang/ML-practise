@@ -61,26 +61,22 @@ def drawminkowski(sampling =10, p = [2]):
     plt.legend();
     plt.show();
 
+
 """
-draw k-means gragh
+draw points gragh
 data dimension is 2, which means flat gragh in 100*100
 
-points:data set
-centroids:cluster default centroids
-p:minkowski distance parameter
+clusters:each item in clusters is a set of points
+title:graph title
 
-绘制k-means算法图示
-采用二维图示，即平面图(100*100)
+绘制二维点图(100*100)
 
-points:数据集
-k:各类别的初始质心
-p:采用闵式距离作为距离公式，参数p值
+clusters:分类的数据集
+title:图标题
 """
-def drawkmeans(points, centroids, p):
-    print "k-means:n=",len(points),", k=",len(centroids),", p=",p;
-    assert(len(points) > 0);
-    assert(len(centroids) > 0);
-    assert(p > 0);
+def drawpoints(clusters, title):
+    assert(len(clusters) > 0);
+    print "clusters:\n", clusters;
     
     plt.figure(figsize=(8,8), dpi=80);
     plt.xlabel("X");
@@ -88,83 +84,7 @@ def drawkmeans(points, centroids, p):
     plt.ylim(-100,100)
     plt.plot(np.linspace(-100, 100, 100), np.zeros(100), "k,", linewidth = 2);
     plt.plot(np.zeros(100), np.linspace(-100, 100, 100), "k,", linewidth = 2);
-
-    clusters, turn=kmeans.alg_kmeans(points, centroids, p);
-    print turn, "turns";
-    print "clusters:", clusters;
-    plt.title("k-means, %d points, k=%d, p=%d, turns=%d"%(len(points),len(centroids),p, turn));
-    for c in clusters:
-        if len(c) == 0:
-            continue;
-        X = [];
-        Y = [];
-        for idx in c:
-            point = points[idx];
-            X.append(point[0]);
-            Y.append(point[1]);
-        centroidOfc = [sum(X)/len(X), sum(Y)/len(Y)];
-        # choose color and style
-        color=random.randint(1, 0xffffff);
-        color="#" + format(color, "06x");
-        shape=".,ov^<>1234sphHd|_+x";
-        shape=shape[random.randint(0, len(shape) - 1)];
-        shape +=':';
-        plt.plot(X,Y, shape, color=color, linewidth = 1);
-        # annotate
-        plt.annotate(str(len(c))+"points", xy=centroidOfc, xycoords='data',color='r');
-        # centroids of clusters
-        plt.plot(centroidOfc[0], centroidOfc[1], "*r");
-        
-    plt.legend();
-    plt.show();
-
-"""
-draw fcm gragh
-data dimension is 2, which means flat gragh in 100*100
-
-points:data set
-u:default u matrix, degree of membership of data point in cluster
-m:
-p:minkowski distance parameter
-e:terminate number
-
-绘制fcm算法图示
-采用二维图示，即平面图(100*100)
-
-points:数据集
-u:初始归属概率矩阵
-m:权值
-p:采用闵式距离作为距离公式，参数p值
-e:终止参数值
-"""
-def drawfcm2(points,u,m,p,e):
-    assert(len(points) > 0);
-    assert(len(u) == len(points));
-    assert(len(u[0]) > 0);
-    assert(m > 0);
-    assert(p > 0);
-    assert(e > 0);
-    c=len(u[0]);
-    print "fcm:n=",len(points),", c=",c,", m=",m,", p=",p,", e=",e;
-
-    plt.figure(figsize=(8,8), dpi=80);
-    plt.xlabel("X");
-    plt.ylabel("Y");
-    plt.ylim(-100,100)
-
-    plt.plot(np.linspace(-100, 100, 100), np.zeros(100), "k,", linewidth = 2);
-    plt.plot(np.zeros(100), np.linspace(-100, 100, 100), "k,", linewidth = 2);
-
-    u2,turn=fcm.alg_fcm(points, u, m, p, e);
-    plt.title("fcm, %d points, c=%d, m=%d, p=%d, e=%f, turns=%d"%(len(points),len(u[0]), m, p, e, turn));
-    print turn,"turns";
-    print "last u:", u2;
-    clusters = [[] for i in range(c)];
-    for i in range(len(u2)):
-        maxu = max(u2[i]);
-        ci = u2[i].index(maxu);
-        clusters[ci].append(points[i]);
-    print "clusters:",clusters;
+    plt.title(title);
 
     for c in clusters:
         if len(c) == 0:
@@ -182,9 +102,81 @@ def drawfcm2(points,u,m,p,e):
         plt.annotate(str(len(c[0]))+"points", xy=centroidOfc, xycoords='data',color='r');
         # centroids of clusters
         plt.plot(centroidOfc[0], centroidOfc[1], "*r");
-        
+    
     plt.legend();
     plt.show();
+
+"""
+draw k-means gragh
+data dimension is 2, which means flat gragh in 100*100
+
+points:data set
+centroids:cluster default centroids
+p:minkowski distance parameter
+terminateturn:terminate iteration turn, 0 based
+
+绘制k-means算法图示
+采用二维图示，即平面图(100*100)
+
+points:数据集
+k:各类别的初始质心
+p:采用闵式距离作为距离公式，参数p值
+terminateturn:终止迭代的轮次，从0开始
+"""
+def drawkmeans(points, centroids, p, terminateturn=sys.maxint):
+    print "k-means:n=",len(points),", k=",len(centroids),", p=",p,", turn=", terminateturn;
+    assert(len(points) > 0);
+    assert(len(centroids) > 0);
+    assert(p > 0);
+
+    clusteridxs, turn=kmeans.alg_kmeans(points, centroids, p, terminateturn);
+    print turn, "turns";
+    clusters = [[] for c in range(len(centroids))]
+    for c in range(len(centroids)):
+        for idx in clusteridxs[c]:
+            clusters[c].append(points[idx]);
+    drawpoints(clusters, "k-means, %d points, k=%d, p=%d, turns=%d"%(len(points),len(centroids),p, turn));
+
+"""
+draw fcm gragh
+data dimension is 2, which means flat gragh in 100*100
+
+points:data set
+u:default u matrix, degree of membership of data point in cluster
+m:
+p:minkowski distance parameter
+e:terminate number
+terminateturn:terminate iteration turn, 0 based
+
+绘制fcm算法图示
+采用二维图示，即平面图(100*100)
+
+points:数据集
+u:初始归属概率矩阵
+m:权值
+p:采用闵式距离作为距离公式，参数p值
+e:终止参数值
+terminateturn:终止迭代的轮次，从0开始
+"""
+def drawfcm2(points, u, m, p, e, terminateturn=sys.maxint):
+    assert(len(points) > 0);
+    assert(len(u) == len(points));
+    assert(len(u[0]) > 0);
+    assert(m > 0);
+    assert(p > 0);
+    assert(e > 0);
+    c=len(u[0]);
+    print "fcm:n=",len(points),", c=",c,", m=",m,", p=",p,", e=",e,", turn=", terminateturn;
+
+    u2,turn=fcm.alg_fcm(points, u, m, p, e, terminateturn);
+    print turn,"turns";
+    print "last u:", u2;
+    clusters = [[] for i in range(c)];
+    for i in range(len(u2)):
+        maxu = max(u2[i]);
+        ci = u2[i].index(maxu);
+        clusters[ci].append(points[i]);
+    drawpoints(clusters, "fcm, %d points, c=%d, m=%d, p=%d, e=%f, turns=%d"%(len(points),len(u[0]), m, p, e, turn));
 
 def testkmeans(points):
     print "-----k-means-----";    
@@ -210,6 +202,10 @@ def testfcm(points):
     drawfcm2(points,u,m,p,e);
     
 if __name__ == "__main__":
+
+    clusters = [[[random.randint(-100+50*c, -100+50*(c+1)), random.randint(-100, 100)] for p in range(random.randint(5, 10))] for c in range(4)];
+    drawpoints(clusters, "test title");
+    
     drawminkowski(10000, [1/float(10),1/float(2),1,2,3,10]);
 
     # data points
@@ -222,10 +218,3 @@ if __name__ == "__main__":
 
     #k-means
     testkmeans(points);
-
-
-
-
-
-
-

@@ -23,6 +23,7 @@ u:matrix of the degree of the membership of data point in some cluster(n*c)
 m:any real number
 p:minowski distance parameter, use minkowski distance to meassure proxity of data point and cluster
 e:N+
+terminateturn:terminate iteration turn, 0 based
 ret:(terminated u matrix, calculate turns (0 based))
 
 fcm算法
@@ -31,9 +32,10 @@ u:points中数据点归属到各个分类的当前归属概率矩阵（n*c）
 m:权重
 p:距离算法采用闵氏距离的参数p值
 e:终止值（实数）
+terminateturn:终止迭代的轮次，从0开始
 返回值:一个tuple:(最终计算过后的u矩阵,计算轮次（从0开始）)
 """
-def alg_fcm(points,u,m,p,e):
+def alg_fcm(points,u,m,p,e, terminateturn=sys.maxint):
     assert(len(points) == len(u));
     assert(len(points) > 0);
     assert(len(u[0]) > 0);
@@ -53,6 +55,8 @@ def alg_fcm(points,u,m,p,e):
             break;
         u1 = u2;
         k=k+1;
+        if k > terminateturn:
+            break;
         
     return (u2, k);
 

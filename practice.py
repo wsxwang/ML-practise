@@ -14,9 +14,9 @@ import os;
 import numpy as np;
 import matplotlib.pyplot as plt;
 import random;
-import Tkinter as tk
+import Tkinter as tk;
 
-import drawgraph as dr
+import drawgraph as dr;
 
 
 """
@@ -68,31 +68,22 @@ class FrmConfig():
 
 """
 ------------------------------------------------------------------------
-功能函数
-"""
-def strorint(si):
-    if type(si) == str:
-        si = int(si);
-    return si;
-
-"""
-------------------------------------------------------------------------
 按钮函数
 """
 # 按钮函数
 def btfunc_randompoints():
-    pointscount = strorint(config.c_n.get());
+    pointscount = int(config.c_n.get());
     main.points = [[random.randint(-100, 100), random.randint(-100, 100)] for i in range(pointscount)];
     print "random points:\n", main.points;
 
 def btfunc_randomcentroids():
-    k = strorint(config.c_k.get());
+    k = int(config.c_k.get());
     main.centroids = [[random.randint(-100, 100), random.randint(-100, 100)] for i in range(k)];
     print "random centroids:\n", main.centroids;
 
 def btfunc_randomumatrix():
-    c = strorint(config.c_c.get());
-    pointscount = strorint(config.c_n.get());
+    c = int(config.c_c.get());
+    pointscount = int(config.c_n.get());
     main.u = [[0 for j in range(c)] for i in range(pointscount)];
     for i in range(pointscount):
         for j in range(c-1):
@@ -107,14 +98,16 @@ def btfunc_randomumatrix():
     print "random Uij:\n", main.u;
 
 def btfunc_kmeans():
-    p = strorint(config.c_p.get());
-    dr.drawkmeans(main.points, main.centroids, p);
+    p = int(config.c_p.get());
+    terminateturn = int(main.c_terminateturn.get());
+    dr.drawkmeans(main.points, main.centroids, p, terminateturn);
     
 def btfunc_fcm():
-    m = strorint(config.c_m.get());
-    p = strorint(config.c_p.get());
+    m = int(config.c_m.get());
+    p = int(config.c_p.get());
     e = float(config.c_e.get());
-    dr.drawfcm2(main.points, main.u, m, p, e);
+    terminateturn = int(main.c_terminateturn.get());
+    dr.drawfcm2(main.points, main.u, m, p, e, terminateturn);
 
 """
 ------------------------------------------------------------------------
@@ -130,8 +123,12 @@ class ClassMain():
         self.root.title("practie");
         #root.geometry('640x480');
 
-        tk.Button(self.root, text="k-means",width=10, command=btfunc_kmeans).grid(row=0,column=0);
-        tk.Button(self.root, text="fcm", width=10, command=btfunc_fcm).grid(row=0,column=1);
+        tk.Label(self.root, text="terminate turn=").grid(row=0,column=0, sticky=tk.W);
+        self.c_terminateturn = tk.Entry(self.root, width=10);
+        self.c_terminateturn.insert(0, str(sys.maxint));
+        self.c_terminateturn.grid(row=0,column=1);
+        tk.Button(self.root, text="k-means",width=10, command=btfunc_kmeans).grid(row=0,column=2);
+        tk.Button(self.root, text="fcm", width=10, command=btfunc_fcm).grid(row=0,column=3);
 
         config.createWidgets();
         btfunc_randompoints();
@@ -145,5 +142,3 @@ config = FrmConfig(main.root);
 
 if __name__ == "__main__":
     main.mainfunc();
-
-    
