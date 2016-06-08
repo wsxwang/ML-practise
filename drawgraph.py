@@ -212,14 +212,38 @@ def drawfcm1(points, u, m, p, e, terminateturn=sys.maxint):
     u2,turn=fcm.alg_fcm(points, u, m, p, e, terminateturn);
     print turn,"turns";
     print "last u:", u2;
-    clusters = [[] for i in range(c)];
-    for i in range(len(u2)):
-        maxu = max(u2[i]);
-        ci = u2[i].index(maxu);
-        clusters[ci].append(points[i]);
-    print clusters;
-#    drawpoints(clusters, "fcm, %d points, c=%d, m=%d, p=%d, e=%f, turns=%d"%(len(points),len(u[0]), m, p, e, turn));
 
+    plt.figure(figsize=(16,8), dpi=80);
+    plt.xlabel("X");
+    plt.ylabel("Y");
+    plt.ylim(0,1)
+    plt.plot(np.linspace(-100, 100, 100), np.zeros(100), "k,", linewidth = 2);
+    plt.plot(np.zeros(100), np.linspace(0, 1, 100), "k,", linewidth = 2);
+    plt.title("fcm, %d points, c=%d, m=%d, p=%d, e=%f, turns=%d"%(len(points),len(u[0]), m, p, e, turn));
+
+    # draw points
+    X=[p[0] for p in points];
+    Y=np.zeros(len(points))
+    plt.plot(X,Y, "ok");
+
+    # draw cofficient line
+    for j in range(c):
+        Y=[u2[i][j] for i in range(len(points))]
+        pointsort = [[X[i],Y[i]] for i in range(len(points))];
+        pointsort.sort();
+       
+        # choose color and style
+        color=random.randint(1, 0xffffff);
+        color="#" + format(color, "06x");
+        shape=".,ov^<>1234sphHd|_+x";
+        shape=".";
+        shape=shape[random.randint(0, len(shape) - 1)];
+        shape +=':';
+        
+        plt.plot([pointsort[i][0] for i in range(len(points))], [pointsort[i][1] for i in range(len(points))], shape, color=color, linewidth = 1);
+    
+    plt.legend();
+    plt.show();
 
 
 """

@@ -134,7 +134,10 @@ def fcm_c(points, u, m):
         for i in range(n):
             sum2 += np.power(u[i][j], m);
             sum1 += np.dot(points[i], np.power(u[i][j], m));
-        cj = sum1 /sum2;
+        if sum2!= 0:
+            cj = sum1 /sum2;
+        else:
+            cj = [0 for d in range(len(points[i]))];
         ret.append(cj);
 
     return ret;
@@ -157,7 +160,7 @@ p:同alg_fcm
 def fcm_u(points, centroids, m, p):
     assert(len(points) > 0);
     assert(len(centroids) > 0);
-    assert(m > 0);
+    assert(m > 1);
     assert(p > 0);
 
     n = len(points);
@@ -169,8 +172,10 @@ def fcm_u(points, centroids, m, p):
             d1 = dis_minkowski(points[i],centroids[j],p);
             for k in range(c):
                 d2 = dis_minkowski(points[i],centroids[k],p);
-                sum1 += np.power(d1/d2, float(2)/(float(m)-1));
-            ret[i][j] = 1/sum1;
+                if d2!= 0:
+                    sum1 += np.power(d1/d2, float(2)/(float(m)-1));
+            if sum1!=0:
+                ret[i][j] = 1/sum1;
 
     return ret;
 

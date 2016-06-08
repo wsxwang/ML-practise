@@ -87,14 +87,14 @@ def btfunc_randomumatrix():
     main.u = [[0 for j in range(c)] for i in range(pointscount)];
     for i in range(pointscount):
         for j in range(c-1):
-            leftrange = c-sum(main.u[i])-1;
+            leftrange = c*10-sum(main.u[i])-1;
             if leftrange == 0:
                 break;
             main.u[i][j] = random.randint(0, leftrange);
         if sum(main.u[i]) == 0:
             main.u[i][0] = 1;
-        main.u[i][c-1] = c-sum(main.u[i]);
-    main.u = np.dot(main.u, 1/float(c));
+        main.u[i][c-1] = c*10-sum(main.u[i]);
+    main.u = np.dot(main.u, 1/float(c*10));
     print "random Uij:\n", main.u;
 
 def btfunc_kmeans():
@@ -102,12 +102,19 @@ def btfunc_kmeans():
     terminateturn = int(main.c_terminateturn.get());
     dr.drawkmeans(main.points, main.centroids, p, terminateturn);
     
-def btfunc_fcm():
+def btfunc_fcm2():
     m = int(config.c_m.get());
     p = int(config.c_p.get());
     e = float(config.c_e.get());
     terminateturn = int(main.c_terminateturn.get());
     dr.drawfcm2(main.points, main.u, m, p, e, terminateturn);
+    
+def btfunc_fcm1():
+    m = int(config.c_m.get());
+    p = int(config.c_p.get());
+    e = float(config.c_e.get());
+    terminateturn = int(main.c_terminateturn.get());
+    dr.drawfcm1(main.points, main.u, m, p, e, terminateturn);
 
 """
 ------------------------------------------------------------------------
@@ -128,7 +135,8 @@ class ClassMain():
         self.c_terminateturn.insert(0, str(sys.maxint));
         self.c_terminateturn.grid(row=0,column=1);
         tk.Button(self.root, text="k-means",width=10, command=btfunc_kmeans).grid(row=0,column=2);
-        tk.Button(self.root, text="fcm", width=10, command=btfunc_fcm).grid(row=0,column=3);
+        tk.Button(self.root, text="fcm2", width=10, command=btfunc_fcm2).grid(row=0,column=3);
+        tk.Button(self.root, text="fcm1", width=10, command=btfunc_fcm1).grid(row=0,column=4);
 
         config.createWidgets();
         btfunc_randompoints();
