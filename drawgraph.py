@@ -300,8 +300,6 @@ def testfcm1():
 main
 """
 if __name__ == "__main__":
-    testfcm1();
-    """
     clusters = [[[random.randint(-100+50*c, -100+50*(c+1)), random.randint(-100, 100)] for p in range(random.randint(5, 10))] for c in range(4)];
     drawpoints(clusters, "test title");
     
@@ -319,6 +317,5 @@ if __name__ == "__main__":
     testfcm2(points);
     #fcm dimension=1
     testfcm1();
-    """
 
     
