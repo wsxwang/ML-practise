@@ -63,6 +63,7 @@ def drawminkowski(sampling =10, p = [2]):
 
 
 """
+用于绘制分类图
 draw points gragh
 data dimension is 2, which means flat gragh in 100*100
 
@@ -105,7 +106,47 @@ def drawpoints(clusters, title):
     
     plt.legend();
     plt.show();
+    
+"""
+用于绘制函数图
+绘制多条线
+lines:多条线的集合，每条线形如([x1,x2,...xn],[y1,y2,...,yn],line title)
+title:图标题
+"""
+def drawlines(lines, title):
+    assert(len(lines) > 0);
+    print "lines:\n", lines;
+    
+    plt.figure(figsize=(8,8), dpi=80);
 
+    minx=0;
+    miny=0;
+    maxx=0;
+    maxy=0;
+
+    for c in lines:
+        if len(c) != 3:
+            continue;
+        # choose color
+        color=random.randint(1, 0xffffff);
+        color="#" + format(color, "06x");
+        shape=":"
+        plt.plot(c[0],c[1], shape, color=color, linewidth = 1, label=c[2]);
+        minx=min(minx,min(c[0]));
+        maxx=max(maxx,max(c[0]));
+        miny=min(miny,min(c[1]));
+        maxy=max(maxy,max(c[1]));
+                 
+    plt.xlabel("X");
+    plt.ylabel("Y");
+    plt.ylim(miny,maxy)
+    plt.plot(np.linspace(minx, maxx, 100), np.zeros(100), "k,", linewidth = 2);
+    plt.plot(np.zeros(100), np.linspace(miny, maxy, 100), "k,", linewidth = 2);
+    plt.title(title);
+    
+    plt.legend();
+    plt.show();
+    
 """
 draw k-means gragh
 data dimension is 2, which means flat gragh in 100*100
@@ -294,6 +335,15 @@ def testfcm1():
     print "points:", points;
     print "default u:", u;
     drawfcm1(points,u,m,p,e);
+
+def testline():
+    print "-----draw lines-----";
+    X=np.linspace(-10,10, 100);
+    Y1=2*X+5;
+    Y2=np.power(X, 2);
+    drawlines(
+        [(X,Y1,"y=2x+5"),(X,Y2,"y=x*x")]
+        , "test lines");
         
 """
 ------------------------------------------------------------------------
@@ -317,5 +367,7 @@ if __name__ == "__main__":
     testfcm2(points);
     #fcm dimension=1
     testfcm1();
+
+    testline();
 
     
